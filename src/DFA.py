@@ -1,6 +1,7 @@
+import copy
 
-class FA:
-    """ This class represent any type of finite automaton."""
+class DFA:
+    """ This class represent any type of deterministic finite automaton."""
     def __init__(self, alphabet):
         """ Initialise the finite automaton.
             @param the alphabet of the automaton."""
@@ -15,8 +16,7 @@ class FA:
         self.init = None
         """ A list containing the name of the final states."""
         self.finals = []
-        """ A string containing all symbol in the alphabet. The string "\e"
-            is used to represent epsilon and is implicit"""
+        """ A string containing all symbol in the alphabet."""
         self.alphabet = alphabet
 
     def add_state(self, state, final = False):
@@ -34,13 +34,23 @@ class FA:
         """ Returns true if the symbol is part of the alphabet,
             false otherwise.
             @param symbol the symbol to be tested """
-        if symbol is "\e": return True
         if symbol not in self.alphabet: return False
         return True
 
+    def dst_state(self, src_state, symbol):
+        """ Search the transition corresponding to the specified source state
+            and symbol and returns the destination state. If the transition does
+            not exists, return None.
+            @param src_state the source state of the transition.
+            @param symbol the symbol of the transition. """
+        for (s, dst_state) in self.transitions[src_state]:
+            if s == symbol:
+                return dst_state
+        return None
+
     def add_transition(self, src_state, symbol, dst_state):
-        """ Add a transition to the FA. Print error if the exact
-            transition already exists.
+        """ Add a transition to the FA. Print error if the automaton already have a
+            transition for the specified source state and symbol.
             @param src_state the name of the source state.
             @param symbol the symbol of the transition
             @param dst_state the name of the destination state."""
@@ -54,16 +64,24 @@ class FA:
             print("error : the state '" + dst_state + "' is not an existing state.")
             return
 
-        if (symbol, dst_state) in self.transitions[src_state]:
-            print("error : the transition (" + src_state + ", " + symbol + ", " + dst_state + ") already exists.")
+        if self.dst_state(src_state, symbol) != None:
+            print("error : the transition (" + src_state + ", " + symbol + ", ...) already exists.")
             return
 
         self.transitions[src_state].append((symbol, dst_state))
         return
 
+    def clone(self):
+        a = DFA(self.alphabet)
+        a.states = self.states.copy()
+        a.init = self.init
+        a.finals = self.finals
+        a.transitions = copy.deepcopy(self.transitions)
+        return a
+
     def __str__(self):
         ret = "FA :\n"
-        ret = ret + "   - alphabet   : 'ε" + self.alphabet + "'\n"
+        ret = ret + "   - alphabet   : " + self.alphabet + "'\n"
         ret = ret + "   - init       : " + str(self.init) + "\n"
         ret = ret + "   - finals     : " + str(self.finals) + "\n"
         ret = ret + "   - states (%d) :\n" % (len(self.states))
