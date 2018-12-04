@@ -58,6 +58,63 @@ def complete(dfa):
 
     return completed
 
+def complement(dfa):
+    """ Returns a complementary automaton from the specified automaton (which
+        remains inchanged).
+        @param dfa the input automaton.
+        @return a complementary automaton recognizing the reversal language."""
+    ret = dfa.clone()
+
+    oldfinals = dfa.finals.copy()
+    dfa.finals.clear()
+
+    for state in dfa.states:
+        if state not in oldfinals:
+            dfa.finals.append(state)
+
+    return ret
+
+def successors(dfa, state):
+    """ Returns the list of the successor of the specified state in the DFA.
+        @param dfa      the considered automaton.
+        @param state    the considered state.
+        @return the list of the successors of the state"""
+    ret = []
+    for (symbol, dst_state) in dfa.transitions[state]:
+        ret.append(dst_state)
+
+    return ret
+
+def predecessors(dfa, state):
+    """ Returns the list of the predecessors of the specified state in the DFA.
+        @param dfa      the considered automaton.
+        @param state    the considered state.
+        @return the list of the predecessors of the state"""
+    ret = []
+    for src_state in dfa.states:
+        for (symbol, dst_state) in dfa.transition[src_state]
+            if dst_state == state:
+                ret.append(src_state)
+
+    return ret
+
+def accessible_states(dfa):
+    """ Returns the list of all accessible states in the specified automaton.
+        @param dfa  the automaton considered."""
+
+    accessibles = []
+
+    visited = []
+    to_visit = [dfa.init]
+
+    while len(to_visit) != 0:
+        state = to_visit.pop()
+
+        visited.append(state)
+
+
+
+
 def accessible(dfa, state):
     """ Returns true if the specified state is accessible in the automaton, returns
         false otherwise.
@@ -68,4 +125,8 @@ def accessible(dfa, state):
         print("error : the state '" + state + "' is not part of the automaton.")
         return
 
-    
+    return state in accessibles_states(dfa)
+
+def product(dfa1, dfa2):
+
+    return ""
