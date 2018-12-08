@@ -16,12 +16,17 @@ class DFA:
         self.init = None
         """ A list containing the name of the final states."""
         self.finals = []
-        """ A string containing all symbol in the alphabet."""
-        self.alphabet = alphabet
+        """ A string containing all symbols in the alphabet."""
+        self.alphabet = ""
+        for s in alphabet:
+            if s not in self.alphabet:
+                self.alphabet += s
 
     def add_state(self, state, final = False):
         """ Add a new state. Print error if the state already exists.
-            @param state the name of the new state."""
+            @param state    the name of the new state.
+            @param final    a boolean determining if the state is
+                final"""
         if state in self.states:
             print("error : state '" + state + "' already exists.")
             return
@@ -43,6 +48,9 @@ class DFA:
             not exists, return None.
             @param src_state the source state of the transition.
             @param symbol the symbol of the transition. """
+        if src_state not in self.states:
+            print("error : the state '" + src_state + "' is not an existing state.")
+            return
         for (s, dst_state) in self.transitions[src_state]:
             if s == symbol:
                 return dst_state
@@ -72,6 +80,7 @@ class DFA:
         return
 
     def clone(self):
+        """ Returns a copy of the DFA."""
         a = DFA(self.alphabet)
         a.states = self.states.copy()
         a.init = self.init
@@ -81,16 +90,16 @@ class DFA:
 
     def __str__(self):
         ret = "FA :\n"
-        ret = ret + "   - alphabet   : " + self.alphabet + "'\n"
-        ret = ret + "   - init       : " + str(self.init) + "\n"
-        ret = ret + "   - finals     : " + str(self.finals) + "\n"
-        ret = ret + "   - states (%d) :\n" % (len(self.states))
+        ret += "   - alphabet   : '" + self.alphabet + "'\n"
+        ret += "   - init       : " + str(self.init) + "\n"
+        ret += "   - finals     : " + str(self.finals) + "\n"
+        ret += "   - states (%d) :\n" % (len(self.states))
         for state in self.states:
-            ret = ret + "       - (%s)" % (state)
+            ret += "       - (%s)" % (state)
             if len(self.transitions[state]) is 0:
-                ret = ret + ".\n"
+                ret += ".\n"
             else:
-                ret = ret + ":\n"
+                ret += ":\n"
                 for (sym, dest) in self.transitions[state]:
-                    ret = ret + "          --(%s)--> (%s)\n" % (sym, dest)
+                    ret += "          --(%s)--> (%s)\n" % (sym, dest)
         return ret
