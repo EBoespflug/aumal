@@ -48,7 +48,7 @@ def to_dot(dfa, **kwargs):
     if "group" not in kwargs: kwargs["group"] = False
 
     # Header
-    ret = "digraph " + kwargs["name"] + " {\n    rankdir=\"LR\";\n\n"
+    ret = "digraph " + kwargs["name"] + " {\n    bgcolor=\"transparent\";\nrankdir=\"LR\";\n\n"
     ret += "    // States (" + str(len(dfa.states)) + ")\n"
 
     state_name = lambda s : "Q_" + str(dfa.states.index(s))

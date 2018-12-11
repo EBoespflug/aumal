@@ -1,4 +1,5 @@
 import DFA
+import copy
 
 def run(dfa, word, verbose = False):
     """ Runs the specified DFA on a word and returns True if the word is
@@ -93,6 +94,83 @@ def complete(dfa):
             if dfa.dst_state(state, symbol) == None:
                 dfa.add_transition(state, symbol, qp)
 
+def accessible_states(dfa):
+    """ Returns the list of all accessible states in the specified automaton.
+        @param dfa  the automaton considered.
+        @return the list of the accessible states."""
+    visited = []
+    to_visit = [dfa.init]
+
+    while len(to_visit) > 0:
+        state = to_visit.pop()
+        visited.append(state)
+        for succ in successors(dfa, state):
+            if succ not in visited and succ not in to_visit:
+                to_visit.append(succ)
+
+    return visited
+
+def accessible(dfa, state):
+    """ Returns True if the specified state is accessible in the automaton, returns
+        False otherwise.
+        @param dfa      the considered automaton.
+        @param state    the state to be tested.
+        @return True if the state is accessible, False otherwise."""
+    if state not in dfa.states:
+        print("error : the state '" + state + "' is not part of the automaton.")
+        return
+
+    return state in accessible_states(dfa)
+
+def accessible(dfa):
+    """ Returns True if the specified DFA is accessible (if all it's states are,
+     accessible), False otherwise.
+        @param dfa      the considered automaton.
+        @return True if the DFA is accessible, False otherwise."""
+    return len(dfa.states) == len(accessible_states(dfa))
+
+def coaccessible_states(dfa):
+    """ Returns the list of all co-accessible states in the specified automaton.
+        @param dfa  the automaton considered.
+        @return the list of the co-accessible states."""
+    visited = []
+    to_visit = dfa.finals.copy()
+
+    while len(to_visit) > 0:
+        state = to_visit.pop()
+        visited.append(state)
+        for pred in predecessors(dfa, state):
+            if pred not in visited and pred not in to_visit:
+                to_visit.append(pred)
+
+    return visited
+
+def coaccessible(dfa, state):
+    """ Returns True if the specified state is accessible in the automaton, returns
+        False otherwise.
+        @param dfa      the considered automaton.
+        @param state    the state to be tested.
+        @return True if the state is coaccessible, False otherwise."""
+    if state not in dfa.states:
+        print("error : the state '" + state + "' is not part of the automaton.")
+        return
+
+    return state in coaccessible_states(dfa)
+
+def coaccessible(dfa):
+    """ Returns True if the specified DFA is coaccessible (if all it's states are,
+     accessible), False otherwise.
+        @param dfa      the considered automaton.
+        @return True if the DFA is coaccessible, False otherwise."""
+    return len(dfa.states) == len(coaccessible_states(dfa))
+
+def trim(dfa):
+    """ Returns True if the specified DFA is trim (accessible and coaccessible),
+        False otherwise.
+        @param dfa      the considered automaton.
+        @return True is the DFA is trim, False otherwise."""
+    return accessible(dfa) && coaccessible(dfa)
+
 def complement(dfa):
     """ Returns a complementary automaton from the specified automaton (which
         remains inchanged).
@@ -108,32 +186,6 @@ def complement(dfa):
             dfa.finals.append(state)
 
     return ret
-
-def accessible_states(dfa):
-    """ Returns the list of all accessible states in the specified automaton.
-        @param dfa  the automaton considered."""
-
-    accessibles = []
-
-    visited = []
-    to_visit = [dfa.init]
-
-    while len(to_visit) != 0:
-        state = to_visit.pop()
-
-        visited.append(state)
-
-def accessible(dfa, state):
-    """ Returns true if the specified state is accessible in the automaton, returns
-        false otherwise.
-        @param dfa      the considered automaton.
-        @param state    the state to be tested.
-        @return true if the state is accessible, false otherwise."""
-    if state not in dfa.states:
-        print("error : the state '" + state + "' is not part of the automaton.")
-        return
-
-    return state in accessibles_states(dfa)
 
 def product(dfa1, dfa2):
 
