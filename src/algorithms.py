@@ -198,11 +198,6 @@ def product(dfa1, dfa2):
     @param dfa2 the second operand of the product.
     @return the product of the two DFAs."""
 
-    def to_list(s) :
-        l = []
-        for char in s:
-            l.append(char)
-        return l
     alphabet = set.union(set(list(dfa1.alphabet)), set(list(dfa2.alphabet)))
     ret = DFA.DFA(alphabet)
     to_visit = []
