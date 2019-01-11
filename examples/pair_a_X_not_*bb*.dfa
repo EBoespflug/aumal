@@ -1,0 +1,22 @@
+a = DFA.DFA("ba")
+a.add_state("{0,0}", True)
+a.add_state("{0,1}", True)
+a.add_state("{1,0}")
+a.add_state("{1,1}")
+a.add_state("{1,2}")
+a.add_state("{0,2}")
+
+a.init = "{0,0}"
+
+a.add_transition("{0,0}", "b", "{0,1}")
+a.add_transition("{0,0}", "a", "{1,0}")
+a.add_transition("{0,1}", "b", "{0,2}")
+a.add_transition("{0,1}", "a", "{1,0}")
+a.add_transition("{1,0}", "b", "{1,1}")
+a.add_transition("{1,0}", "a", "{0,0}")
+a.add_transition("{1,1}", "b", "{1,2}")
+a.add_transition("{1,1}", "a", "{0,0}")
+a.add_transition("{1,2}", "b", "{1,2}")
+a.add_transition("{1,2}", "a", "{0,2}")
+a.add_transition("{0,2}", "b", "{0,2}")
+a.add_transition("{0,2}", "a", "{1,2}")

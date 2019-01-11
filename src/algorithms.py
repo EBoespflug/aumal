@@ -79,7 +79,9 @@ def is_complete(dfa):
 
 def complete(dfa):
     """ Completes the specified automaton.
-        @param dfa the DFA to complete."""
+        @param dfa the DFA to complete.
+        @return the modified DFA."""
+    if is_complete(dfa): return
     # Find a name for Qp
     qp = "Qp"
     i = 0
@@ -93,6 +95,8 @@ def complete(dfa):
         for symbol in dfa.alphabet:
             if dfa.dst_state(state, symbol) == None:
                 dfa.add_transition(state, symbol, qp)
+
+    return dfa
 
 def accessible_states(dfa):
     """ Returns the list of all accessible states in the specified automaton.
@@ -169,15 +173,16 @@ def trim(dfa):
         False otherwise.
         @param dfa      the considered automaton.
         @return True is the DFA is trim, False otherwise."""
-    return accessible(dfa) && coaccessible(dfa)
+    return accessible(dfa) and coaccessible(dfa)
 
-def complement(dfa):
-    """ Returns a complementary automaton from the specified automaton (which
-        remains inchanged).
+def negate(dfa):
+    """ Negates the specfied automaton, which now recognizes the complementary
+        language of the original DFA.
         @param dfa the input automaton.
-        @return a complementary automaton recognizing the reversal language."""
-    ret = dfa.clone()
-
+        @returns the modified DFA."""
+    if not is_complete(dfa):
+        print("error : negation requires a complete DFA.")
+        return
     oldfinals = dfa.finals.copy()
     dfa.finals.clear()
 
@@ -185,8 +190,50 @@ def complement(dfa):
         if state not in oldfinals:
             dfa.finals.append(state)
 
-    return ret
+    return dfa
 
 def product(dfa1, dfa2):
+    """ Returns a new automaton which is the product of the two specified DFAs.
+    @param dfa1 the first operand of the product.
+    @param dfa2 the second operand of the product.
+    @return the product of the two DFAs."""
 
-    return ""
+    def to_list(s) :
+        l = []
+        for char in s:
+            l.append(char)
+        return l
+    alphabet = set.union(set(list(dfa1.alphabet)), set(list(dfa2.alphabet)))
+    ret = DFA.DFA(alphabet)
+    to_visit = []
+
+    """ Returns the superstate corresponding to the specified states and add it
+        to the product DFA if it doesn't exist. """
+    def get_superstate(state1, state2):
+        sstate = "{" + state1 + "," + state2 + "}"
+
+        if sstate not in ret.states:
+            is_final = state1 in dfa1.finals and state2 in dfa2.finals
+            ret.add_state(sstate, is_final)
+            to_visit.append((sstate, state1, state2))
+
+        return sstate
+
+    ret.init = get_superstate(dfa1.init, dfa2.init) # Add init state.
+
+    while len(to_visit) > 0:
+        (sstate, state1, state2) = to_visit.pop()
+
+        # Add transitions.
+        for symbol in ret.alphabet:
+            dst_state1 = dfa1.dst_state(state1, symbol)
+            dst_state2 = dfa2.dst_state(state2, symbol)
+
+            if dst_state1 is None or dst_state2 is None:
+                continue
+
+            dst_sstate = get_superstate(dst_state1, dst_state2)
+
+            ret.add_transition(sstate, symbol, dst_sstate)
+
+    return ret

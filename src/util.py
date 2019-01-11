@@ -61,7 +61,7 @@ def to_dot(dfa, **kwargs):
             ret += "node [shape=doublecircle]; "
         else:
             ret += "node [shape=circle];       "
-        ret += state_name(state) + " [label=" + state + "];\n"
+        ret += state_name(state) + " [label=\"" + state + "\"];\n"
 
     # Transitions
     ret += "\n    // Transitions\n"

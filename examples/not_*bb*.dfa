@@ -1,0 +1,13 @@
+a = DFA.DFA("ab")
+a.add_state("0", True)
+a.add_state("1", True)
+a.add_state("2")
+
+a.init = "0"
+
+a.add_transition("0", "a", "0")
+a.add_transition("0", "b", "1")
+a.add_transition("1", "a", "0")
+a.add_transition("1", "b", "2")
+a.add_transition("2", "a", "2")
+a.add_transition("2", "b", "2")
