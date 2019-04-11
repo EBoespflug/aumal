@@ -232,3 +232,82 @@ def product(dfa1, dfa2):
             ret.add_transition(sstate, symbol, dst_sstate)
 
     return ret
+
+def equivalent_states(dfa):
+    """ Returns a list containing each group of equivalent states.
+    @param dfa the DFA to search for equivalent states.
+    @return a list of equivalent states lists. """
+
+    # Spread finals and non-final states.
+    partitions = [[], []]
+    for state in dfa.states:
+        if state in dfa.finals:
+            partitions[0].append(state)
+        else:
+            partition[1].append(state)
+
+    def partition_group(state_group):
+
+
+
+    changes = True # Determining if a change occured between two generations.
+
+    while changes:
+        for partition in partitions:
+            # Trying to find dinstiguables states.
+            pass
+
+
+def minimize(dfa):
+    """ Minimize the specified automaton (returns a copy).
+    @param dfa the DFA to be minimized.
+    @return the minimal automaton from dfa. """
+
+    ret = dfa.copy()
+
+    if len(dfa.states) < 2:
+        return ret
+
+    eq_states = equivalent_states(dfa)
+
+    def group_of(partitions, state):
+        """ Returns the state group corresponding to the specified
+            state. """
+        for state_group in partitions:
+            if state in state_group:
+                return state_group
+        return None
+
+    to_visit = []
+
+    """ Returns the superstate corresponding to the specified states and add it
+        to the product DFA if it doesn't exist. """
+    def get_superstate(state_group):
+        sstate = "{" + ",".join(state_group) + "}"
+
+        if sstate not in ret.states:
+            is_final =  state_group[0] in dfa1.finals # If one is final, all are final.
+            ret.add_state(sstate, is_final)
+            to_visit.append(sstate, state_group)
+
+        return sstate
+
+    # Construct minimal automaton
+    ret.init = get_superstate(state_of(dfa.init)) # Add init state.
+
+    while len(to_visit) > 0:
+        sstate = to_visit.pop()
+
+        # Add transitions.
+        for state in sstate:
+            for symbol in ret.alphabet:
+                dst_state = dfa.dst_state(state, symbol)
+
+                if dst_state is None:
+                    continue
+
+                dst_sstate = get_superstate(group_of(dst_state))
+
+                ret.add_transition(sstate, symbol, dst_sstate)
+
+    return ret
