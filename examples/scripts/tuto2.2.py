@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# @file example script for tutorial: https://wp.me/p9qb6x-9f
+# @file example script for tutorial 2: https://wp.me/p9qb6x-9f
 
 import util
 from algorithms import *

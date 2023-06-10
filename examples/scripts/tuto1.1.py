@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# @file example script for tutorial: https://wp.me/p9qb6x-7n
+# @file example script for tutorial 1: https://wp.me/p9qb6x-7n
 
 import DFA
 a = DFA.DFA("ab")

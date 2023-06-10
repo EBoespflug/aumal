@@ -96,7 +96,7 @@ class DFA:
         ret += "   - states (%d) :\n" % (len(self.states))
         for state in self.states:
             ret += "       - (%s)" % (state)
-            if len(self.transitions[state]) is 0:
+            if len(self.transitions[state]) == 0:
                 ret += ".\n"
             else:
                 ret += ":\n"

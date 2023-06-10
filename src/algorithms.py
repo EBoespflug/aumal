@@ -246,7 +246,8 @@ def equivalent_states(dfa):
         else:
             partition[1].append(state)
 
-    def partition_group(state_group):
+    # TODO: not implemented...
+    #def partition_group(state_group):
 
 
 
