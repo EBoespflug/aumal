@@ -1,24 +1,30 @@
 from subprocess import call
 import DFA
 
-def read(filename):
-    """ Read the specified dfa from a file.
-        A DFA can be saved with the 'save' function.
-        @param filename the file in which the DFA is stored.
-        @return the DFA from the file.
-        """
+def read(filename: str) -> DFA:
+    """
+    Read the specified dfa from a file. A DFA can be saved with the 'save' function.
+
+    :param filename: the file in which the DFA is stored.
+    :type filename: str
+    :return: the DFA from the file.
+    :rtype: DFA
+    """
     local_dict = locals()
     with open(filename, "r") as file:
         exec(compile(open(filename).read(), filename, 'exec'), globals(), local_dict)
 
     return local_dict["a"]
 
-def save(dfa, filename):
-    """ Save the specified dfa into a file.
-        A DFA can be read with the 'read' function.
-        @param dfa      the DFA to save
-        @param filename the name of the file in which
-            the automaton will be saved."""
+def save(dfa: DFA, filename: str):
+    """
+    Save the specified dfa into a file. A DFA can be read with the 'read' function.
+
+    :param dfa: the DFA to save
+    :type dfa: DFA
+    :param filename: the name of the file in which the automaton will be saved.
+    :type filename: str
+    """
     txt = "a = DFA.DFA(\"" + dfa.alphabet + "\")\n"
     for state in dfa.states:
         if state in dfa.finals:
@@ -35,14 +41,21 @@ def save(dfa, filename):
     with open(filename, "w") as file:
         file.write(txt)
 
-def to_dot(dfa, **kwargs):
-    """ Returns a string corresponding to the specified DFA in DOT format.
-        @param dfa  the DFA to be converted in DOT format.
-        @param_opt name     the name of the automaton for the DOT file.
-            ("Graph01") by default.
-        @param_opt group    if True, the transition are regrouped when they
-            have the smame origin and destination states. False by default.
-        @returns the automaton in DOT format."""
+def to_dot(dfa: DFA, **kwargs) -> str:
+    """
+    Returns a string corresponding to the specified DFA in DOT format.
+
+    **Kwargs**:
+         - `group` (`bool`): if True, the transition are regrouped when they
+            have the same origin and destination states. *default*: `False`.
+         - `name` (`str`): the name of the automaton for the DOT file. 
+            *default*: `"Graph01"`.
+
+    :param dfa: the DFA to be converted.
+    :type dfa: DFA
+    :return: the string DOT representation of the automaton.
+    :rtype: str
+    """
     # Args
     if "name" not in kwargs: kwargs["name"] = "Graph01"
     if "group" not in kwargs: kwargs["group"] = False
@@ -81,17 +94,18 @@ def to_dot(dfa, **kwargs):
                 ret += "    " + state_name(state) + " -> " + state_name(dst_state) + " [label=" + symbol + "];\n"
     return ret + "}\n"
 
-def to_png(dfa, filename, **kwargs):
-    """ Create the PNG image corresponding to the representation of the
+def to_png(dfa: DFA, filename: str, **kwargs):
+    """ 
+    Create the PNG image corresponding to the representation of the
         specified DFA in a file.
-        The automaton is converted in DOT format and the command dot is called
-        in order to generate the PNG.
-        @param_opt name     the name of the automaton for the DOT file.
-            ("Graph01") by default.
-        @param_opt group    if True, the transition are regrouped when they
-            have the smame origin and destination states. False by default.
-        @param filename the name of the PNG file, use the name of the graph if
-            not specified. """
+
+    **Kwargs**: see `to_dot`.
+
+    :param dfa: the DFA to convert in PNG.
+    :type dfa: DFA
+    :param filename: the name of the file.
+    :type filename: str
+    """
 
     tmp_file = filename + ".tmp"
     with open(tmp_file, "w") as file:
@@ -101,16 +115,19 @@ def to_png(dfa, filename, **kwargs):
     call(("rm " + tmp_file).split(" "))
 
 
-def to_pdf(dfa, filename, **kwargs):
-    """ Create the graphical PDF representation of the specified DFA in a file.
+def to_pdf(dfa: DFA, filename: str, **kwargs):
+    """ 
+    Create the graphical PDF representation of the specified DFA in a file.
         The automaton is converted in DOT format and the command dot is called
         in order to generate the PDF.
-        @param_opt name     the name of the automaton for the DOT file.
-            ("Graph01") by default.
-        @param_opt group    if True, the transition are regrouped when they
-            have the smame origin and destination states. False by default.
-        @param filename the name of the PDF file, use the name of the graph if
-            not specified. """
+
+    **Kwargs**: see `to_dot`.
+
+    :param dfa: the DFA to convert in PNG.
+    :type dfa: DFA
+    :param filename: the name of the file.
+    :type filename: str
+    """
 
     tmp_file = filename + ".tmp"
     with open(tmp_file, "w") as file:
