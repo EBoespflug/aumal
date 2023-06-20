@@ -1,0 +1,22 @@
+a = DFA.DFA("01")
+a.add_state("a")
+a.add_state("b")
+a.add_state("c", True)
+a.add_state("d", True)
+a.add_state("e", True)
+a.add_state("f")
+
+a.init = "a"
+
+a.add_transition("a", "0", "b")
+a.add_transition("a", "1", "c")
+a.add_transition("b", "0", "a")
+a.add_transition("b", "1", "d")
+a.add_transition("c", "0", "e")
+a.add_transition("c", "1", "f")
+a.add_transition("d", "0", "e")
+a.add_transition("d", "1", "f")
+a.add_transition("e", "0", "e")
+a.add_transition("e", "1", "f")
+a.add_transition("f", "0", "f")
+a.add_transition("f", "1", "f")

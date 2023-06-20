@@ -49,7 +49,7 @@ class DFA:
             @param src_state the source state of the transition.
             @param symbol the symbol of the transition. """
         if src_state not in self.states:
-            print("error : the state '" + src_state + "' is not an existing state.")
+            print("error : the state '" + str(src_state) + "' is not an existing state.")
             return
         for (s, dst_state) in self.transitions[src_state]:
             if s == symbol:
