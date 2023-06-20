@@ -3,13 +3,13 @@
 # @file example script for tutorial 4: https://wp.me/p9qb6x-ae
 
 
+
 from util import *
 from algorithms import *
 
-a1 = read("../minimisation.dfa")
-#a2 = read("../*aaba*_neg.dfa")
+a1 = read("../minimization.dfa")
 
-print("a = {a1}")
+print(f"a = {a1}")
 
 m = minimize(a1)
 

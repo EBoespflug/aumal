@@ -6,8 +6,8 @@
 from util import *
 from algorithms import *
 
-a = read("../minimisation2.dfa")
-name = "minimisation2"
+a = read("../minimization2.dfa")
+name = "minimization2"
 save(a, f"../{name}.dfa")
 to_png(a, f"../{name}.png", group=True)
 

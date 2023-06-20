@@ -3,14 +3,21 @@ from typing import List, Tuple
 import copy
 import itertools
 
-def run(dfa, word, verbose = False):
-    """ Runs the specified DFA on a word and returns True if the word is
+def run(dfa: DFA, word: str, verbose : bool = False) -> bool:
+    """
+    Runs the specified DFA on a word and returns True if the word is
         accepted.
-        @param dfa      the DFA to be executed.
-        @param word     the word to be tested.
-        @param verbose  if True, more information are displayed about the
-            execution.
-        @return True if the word is accepted, False otherwise."""
+
+    :param dfa: the DFA to be executed.
+    :type dfa: DFA
+    :param word: the word to be tested.
+    :type word: str
+    :param verbose: if True, more information are displayed about the
+            execution, defaults to False
+    :type verbose: bool, optional
+    :return: True if the word is accepted, False otherwise.
+    :rtype: bool
+    """
     if dfa.init == None:
         print("error : the automaton does not have any initial symbol.")
         return False
@@ -37,11 +44,17 @@ def run(dfa, word, verbose = False):
     if verbose: print("ending on non accepting state '" + current_state + "'")
     return False
 
-def successors(dfa, state):
-    """ Returns the list of the successors of the specified state in the DFA.
-        @param dfa      the considered automaton.
-        @param state    the considered state.
-        @return the list of the successors of the state."""
+def successors(dfa: DFA, state: str) -> List[str]:    
+    """ 
+    Returns the list of the successors of the specified state in the DFA.
+
+    :param dfa: the considered automaton.
+    :type dfa: DFA
+    :param state: the considered state.
+    :type state: str
+    :return: the list of the successors of the state.
+    :rtype: List[str]
+    """
     if state not in dfa.states:
         print("error : the specified state '" + state + "' is not part of the automaton.")
         return
@@ -53,11 +66,17 @@ def successors(dfa, state):
 
     return ret
 
-def predecessors(dfa, state):
-    """ Returns the list of the predecessors of the specified state in the DFA.
-        @param dfa      the considered automaton.
-        @param state    the considered state.
-        @return the list of the predecessors of the state."""
+def predecessors(dfa: DFA, state: str) -> List[str]:    
+    """ 
+    Returns the list of the predecessors of the specified state in the DFA.
+
+    :param dfa: the considered automaton.
+    :type dfa: DFA
+    :param state: the considered state.
+    :type state: str
+    :return: the list of the predecessors of the state.
+    :rtype: List[str]
+    """
     if state not in dfa.states:
         print("error : the specified state '" + state + "' is not part of the automaton.")
         return
@@ -70,19 +89,30 @@ def predecessors(dfa, state):
 
     return ret
 
-def is_complete(dfa):
-    """ Returns True if the automaton is complete, False otherwise.
-        @param dfa the automaton to be tested."""
+def is_complete(dfa: DFA) -> bool:
+    """
+    Returns True if the automaton is complete, False otherwise.
+
+    :param dfa: the automaton to test.
+    :type dfa: DFA
+    :return: a boolean corresponding to the completion of the automaton.
+    :rtype: bool
+    """
     for state in dfa.states:
         for symbol in dfa.alphabet:
             if dfa.dst_state(state, symbol) == None:
                 return False
     return True
 
-def complete(dfa):
-    """ Completes the specified automaton.
-        @param dfa the DFA to complete.
-        @return the modified DFA."""
+def complete(dfa: DFA) -> DFA:
+    """
+    Completes the specified automaton.
+
+    :param dfa: the automaton to complete.
+    :type dfa: DFA
+    :return: the automaton.
+    :rtype: DFA
+    """
     if is_complete(dfa): return
     # Find a name for Qp
     qp = "Qp"
@@ -100,10 +130,15 @@ def complete(dfa):
 
     return dfa
 
-def accessible_states(dfa):
-    """ Returns the list of all accessible states in the specified automaton.
-        @param dfa  the automaton considered.
-        @return the list of the accessible states."""
+def accessible_states(dfa: DFA) -> List[str]:
+    """ 
+    Returns the list of all accessible states in the specified automaton.
+
+    :param dfa: the automaton considered.
+    :type dfa: DFA
+    :return: the list of the accessible states.
+    :rtype: List[str]
+    """
     visited = []
     to_visit = [dfa.init]
 
@@ -116,29 +151,45 @@ def accessible_states(dfa):
 
     return visited
 
-def accessible(dfa, state):
-    """ Returns True if the specified state is accessible in the automaton, returns
+def accessible(dfa: DFA, state: str) -> bool:
+    """ 
+    Returns True if the specified state is accessible in the automaton, returns
         False otherwise.
-        @param dfa      the considered automaton.
-        @param state    the state to be tested.
-        @return True if the state is accessible, False otherwise."""
+
+    :param dfa: the considered automaton.
+    :type dfa: DFA
+    :param state: the state to be tested.
+    :type state: str
+    :return: True if the state is accessible, False otherwise.
+    :rtype: bool
+    """
     if state not in dfa.states:
         print("error : the state '" + state + "' is not part of the automaton.")
         return
 
     return state in accessible_states(dfa)
 
-def accessible(dfa):
-    """ Returns True if the specified DFA is accessible (if all it's states are,
+def accessible(dfa: DFA) -> bool:
+    """
+    Returns True if the specified DFA is accessible (if all it's states are,
      accessible), False otherwise.
-        @param dfa      the considered automaton.
-        @return True if the DFA is accessible, False otherwise."""
+
+    :param dfa: the considered automaton.
+    :type dfa: DFA
+    :return: True if the DFA is accessible, False otherwise.
+    :rtype: bool
+    """
     return len(dfa.states) == len(accessible_states(dfa))
 
-def coaccessible_states(dfa):
-    """ Returns the list of all co-accessible states in the specified automaton.
-        @param dfa  the automaton considered.
-        @return the list of the co-accessible states."""
+def coaccessible_states(dfa: DFA) -> List[str]:
+    """ 
+    Returns the list of all coaccessible states in the specified automaton.
+
+    :param dfa: the automaton considered.
+    :type dfa: DFA
+    :return: the list of the coaccessible states.
+    :rtype: List[str]
+    """
     visited = []
     to_visit = dfa.finals.copy()
 
@@ -151,40 +202,56 @@ def coaccessible_states(dfa):
 
     return visited
 
-def coaccessible(dfa, state):
-    """ Returns True if the specified state is accessible in the automaton, returns
+def coaccessible(dfa: DFA, state: str) -> bool:
+    """ 
+    Returns True if the specified state is coaccessible in the automaton, returns
         False otherwise.
-        @param dfa      the considered automaton.
-        @param state    the state to be tested.
-        @return True if the state is coaccessible, False otherwise."""
+
+    :param dfa: the considered automaton.
+    :type dfa: DFA
+    :param state: the state to be tested.
+    :type state: str
+    :return: True if the state is coaccessible, False otherwise.
+    :rtype: bool
+    """
     if state not in dfa.states:
         print("error : the state '" + state + "' is not part of the automaton.")
         return
 
     return state in coaccessible_states(dfa)
 
-def coaccessible(dfa):
-    """ Returns True if the specified DFA is coaccessible (if all it's states are,
-     accessible), False otherwise.
-        @param dfa      the considered automaton.
-        @return True if the DFA is coaccessible, False otherwise."""
+def coaccessible(dfa: DFA) -> bool:
+    """
+    Returns True if the specified DFA is coaccessible (if all it's states are,
+     coaccessible), False otherwise.
+
+    :param dfa: the considered automaton.
+    :type dfa: DFA
+    :return: True if the DFA is coaccessible, False otherwise.
+    :rtype: bool
+    """
     return len(dfa.states) == len(coaccessible_states(dfa))
 
-def trim(dfa):
-    """ Returns True if the specified DFA is trim (accessible and coaccessible),
-        False otherwise.
-        @param dfa      the considered automaton.
-        @return True is the DFA is trim, False otherwise."""
+def trim(dfa: DFA) -> bool:
+    """
+    Returns True if the specified automaton is trim (accessible and coaccessible),
+     False otherwise.
+
+    :param dfa: the considered automaton.
+    :type dfa: DFA
+    :return: True is the DFA is trim, False otherwise.
+    :rtype: bool
+    """
     return accessible(dfa) and coaccessible(dfa)
 
-def negate(dfa):
+def negate(dfa: DFA) -> DFA:
     """ Negates the specfied automaton, which now recognizes the complementary
         language of the original DFA.
         @param dfa the input automaton.
         @returns the modified DFA."""
     if not is_complete(dfa):
         print("error : negation requires a complete DFA.")
-        return
+        return None
     oldfinals = dfa.finals.copy()
     dfa.finals.clear()
 
@@ -194,19 +261,35 @@ def negate(dfa):
 
     return dfa
 
-def product(dfa1, dfa2):
-    """ Returns a new automaton which is the product of the two specified DFAs.
-    @param dfa1 the first operand of the product.
-    @param dfa2 the second operand of the product.
-    @return the product of the two DFAs."""
+def product(dfa1: DFA, dfa2: DFA) -> DFA:
+    """
+    Returns a new automaton which is the product of the two specified DFAs.
 
+    :param dfa1: the first operand of the product.
+    :type dfa1: DFA
+    :param dfa2: the second operand of the product.
+    :type dfa2: DFA
+    :return: the product of the two DFAs.
+    :rtype: DFA
+    """
+    
+    
     alphabet = set.union(set(list(dfa1.alphabet)), set(list(dfa2.alphabet)))
     ret = DFA.DFA(alphabet)
     to_visit = []
 
-    """ Returns the superstate corresponding to the specified states and add it
-        to the product DFA if it doesn't exist. """
-    def get_superstate(state1, state2):
+    def get_superstate(state1: str, state2: str) -> str:
+        """
+         Returns the superstate corresponding to the specified states and add it
+        to the product DFA if it doesn't exist.
+
+        :param state1: state in DFA1.
+        :type state1: str
+        :param state2: state in DFA2.
+        :type state2: str
+        :return: the corresponding superstate.
+        :rtype: str
+        """
         sstate = "{" + state1 + "," + state2 + "}"
 
         if sstate not in ret.states:
